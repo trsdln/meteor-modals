@@ -1,10 +1,9 @@
 class BootstrapModalPlugin
   constructor: (@_modal) ->
 
-#prepeare rendered modal for show
+#prepare rendered modal for show
   afterShow: (rootElement) ->
     @_modalElement = rootElement.find('.modal')
-    console.log 'aftershow', @_modalElement
     @_modalElement.modal('show')
 
 # hide modal (e.g. trigger hide animation etc.)
