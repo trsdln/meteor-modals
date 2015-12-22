@@ -1,5 +1,23 @@
+class BootstrapModalPlugin
+  constructor: (@_$rootElement, @_modal, @_manager) ->
+
+  _getModalElement: () -> @_$rootElement.find('.modal')
+
+#prepeare rendered modal for show
+  afterShow: () ->
+    @_getModalElement().modal('show')
+
+# hide modal (e.g. trigger hide animation etc.)
+  beforeHide: (onHideFinished) ->
+    @_getModalElement().modal('hide')
+    setTimeout onHideFinished, 200
+
+
 class Modal
-  constructor: (@_modalDoc, @_manager) ->
+  constructor: (@_modalDoc, @_manager, @_pluginConstructor) ->
+    rootElement = @_manager._templateInstace.$('__modal-manager-wrapper').find("[data-modalId=#{@_modalDoc._id}]")
+    @_modalPlugin = new @_pluginConstructor(rootElement, this)
+    @_modalPlugin.afterShow()
 
   _notifyAboutModalChange: -> @_manager._updateModal @_modalDoc
 
@@ -10,9 +28,7 @@ class Modal
 
     #then remove template from dom
     removeTemplateCb = => @_manager._removeModal @_modalDoc
-
-    #todo: make this delay configurable (in case of custom animation)
-    Meteor.setTimeout removeTemplateCb, 1000
+    @_modalPlugin.beforeHide(removeTemplateCb)
 
   updateData: (newDataContext) ->
     @_modalDoc.data = newDataContext
@@ -22,6 +38,8 @@ class Modal
 class _ModalManager
   constructor: () ->
     @_modalTemplates = new Mongo.Collection(null)
+
+  _setTemplateInstance: (tmpl) -> @_templateInstace = tmpl
 
   _getInstanceById: (id) ->
     doc = @_modalTemplates.findOne({_id: id})
@@ -35,18 +53,18 @@ class _ModalManager
   _removeModal: (modalToRemove) ->
     @_modalTemplates.remove {_id: modalToRemove._id}
 
-  open: (templateName, data) ->
+  open: (templateName, data, pluginConstructor=BootstrapModalPlugin) ->
     modalDoc =
       name: templateName
       data: data
 
     modalDoc._id = @_modalTemplates.insert modalDoc
 
-    return new Modal(modalDoc, @)
+    return new Modal(modalDoc, @, pluginConstructor)
 
   getInstanceByElement: (domElement) ->
-    #find out modal id we are in
-    currentModalElement = $(domElement).closest('.modal')
+#find out modal id we are in
+    currentModalElement = $(domElement).closest('.__modal-wrapper')
     modalData = Blaze.getData(currentModalElement[0])
 
     #get instance and close
@@ -54,6 +72,10 @@ class _ModalManager
 
 
 @ModalManager = new _ModalManager()
+
+
+Template.ModalManager.onCreated ->
+  ModalManager._setTemplateInstance(@)
 
 
 Template.ModalManager.helpers

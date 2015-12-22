@@ -2,7 +2,7 @@
 
 Easy customizable and reactive modals
 
-### Example
+#### Example
 
 Step 1: Include `ModalManager` in your app layout or in body (in case you don't have layouts)
 
