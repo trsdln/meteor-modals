@@ -1,5 +1,4 @@
 Template._Modal.onRendered ->
-  console.log 'rendered', @
   @modalInstance = ModalManager._getInstanceById @data._id
   @modalInstance._onModalRendered @$('.__modal-wrapper')
 
