@@ -1,6 +1,6 @@
 Package.describe({
   name: 'trsdln:modals',
-  version: '0.5.1',
+  version: '0.5.2',
   // Brief, one-line summary of the package.
   summary: 'Provides easy way to control your modals',
   // URL to the Git repository containing the source code for this package.

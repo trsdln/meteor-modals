@@ -3,12 +3,11 @@ class BootstrapModalPlugin
 
 #prepare rendered modal for show
   afterShow: (rootElement) ->
-    @_modalElement = rootElement.find('.modal')
-    @_modalElement.modal('show')
+    rootElement.find('.modal').modal('show')
 
 # hide modal (e.g. trigger hide animation etc.)
-  beforeHide: (onHideFinished) ->
-    @_modalElement.modal('hide')
+  beforeHide: (rootElement, onHideFinished) ->
+    rootElement.find('.modal').modal('hide')
     setTimeout onHideFinished, 200
 
 
@@ -18,7 +17,11 @@ class Modal
 
   _notifyAboutModalChange: -> @_manager._updateModal @_modalDoc
 
-  _onModalRendered: (rootElement) -> @_modalPlugin.afterShow(rootElement)
+  _onModalRendered: (rootElement) ->
+    @_manager._modalRoots[@_modalDoc._id] = rootElement
+    @_modalPlugin.afterShow(rootElement)
+
+  _getModalRoot: () -> @_manager._modalRoots[@_modalDoc._id]
 
   close: () ->
 #trigger hide animation first
@@ -27,7 +30,7 @@ class Modal
 
     #then remove template from dom
     removeTemplateCb = => @_manager._removeModal @_modalDoc
-    @_modalPlugin.beforeHide(removeTemplateCb)
+    @_modalPlugin.beforeHide(@_getModalRoot(), removeTemplateCb)
 
   updateData: (newDataContext) ->
     @_modalDoc.data = newDataContext
@@ -38,6 +41,7 @@ class _ModalManager
   constructor: () ->
     @_modalTemplates = new Mongo.Collection(null)
     @_plugins = {}
+    @_modalRoots = {}
 
   _setTemplateInstance: (tmpl) -> @_templateInstace = tmpl
 
@@ -57,7 +61,7 @@ class _ModalManager
 
   registerPlugin: (pluginName, pluginConstructor) -> @_plugins[pluginName] = pluginConstructor
 
-  open: (templateName, data, pluginName='bootstrap') ->
+  open: (templateName, data, pluginName = 'bootstrap') ->
     unless @_templateInstace then throw new Error('ModalManager don\'t exist. Please put {{> ModalManager}} into body or layout template')
 
     modalDoc =
