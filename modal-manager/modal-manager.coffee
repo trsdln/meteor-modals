@@ -3,12 +3,13 @@ class BootstrapModalPlugin
 
 #prepare rendered modal for show
   afterShow: (rootElement) ->
-    rootElement.find('.modal').modal('show')
+    modalElement = rootElement.find('.modal').first()
+    modalElement.modal('show')
+    modalElement.on 'hidden.bs.modal', (event) =>
+      @_modal._onModalHidden()
 
 # hide modal (e.g. trigger hide animation etc.)
-  beforeHide: (rootElement, onHideFinished) ->
-    rootElement.find('.modal').modal('hide')
-    setTimeout onHideFinished, 200
+  beforeHide: (rootElement, onModalHidden) ->
 
 
 class Modal
@@ -23,13 +24,15 @@ class Modal
 
   _getModalRoot: () -> @_manager._modalRoots[@_modalDoc._id]
 
+  _onModalHidden: () -> @_manager._removeModal @_modalDoc
+
   close: () ->
 #trigger hide animation first
     @_modalDoc.visible = false
     @_notifyAboutModalChange()
 
     #then remove template from dom
-    removeTemplateCb = => @_manager._removeModal @_modalDoc
+    removeTemplateCb = => @_onModalHidden()
     @_modalPlugin.beforeHide(@_getModalRoot(), removeTemplateCb)
 
   updateData: (newDataContext) ->
@@ -57,6 +60,7 @@ class _ModalManager
     @_modalTemplates.update {_id: updatedModal._id}, {$set: updateQuery}
 
   _removeModal: (modalToRemove) ->
+    delete @_modalRoots[modalToRemove._id]
     @_modalTemplates.remove {_id: modalToRemove._id}
 
   registerPlugin: (pluginName, pluginConstructor) -> @_plugins[pluginName] = pluginConstructor
