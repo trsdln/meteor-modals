@@ -10,6 +10,8 @@ class BootstrapModalPlugin
 
 # hide modal (e.g. trigger hide animation etc.)
   beforeHide: (rootElement, onModalHidden) ->
+    modalElement = rootElement.find('.modal').first()
+    modalElement.modal('hide')
 
 
 class Modal
