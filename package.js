@@ -1,6 +1,6 @@
 Package.describe({
   name: 'trsdln:modals',
-  version: '0.5.4',
+  version: '0.6.0',
   // Brief, one-line summary of the package.
   summary: 'Provides easy way to control your modals',
   // URL to the Git repository containing the source code for this package.
@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.1.0.3');
+  api.versionsFrom('1.2');
   api.use([
     'mongo',
     'templating',
