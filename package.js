@@ -1,6 +1,6 @@
 Package.describe({
   name: 'trsdln:modals',
-  version: '0.6.1',
+  version: '0.6.2',
   // Brief, one-line summary of the package.
   summary: 'Provides easy way to control your modals',
   // URL to the Git repository containing the source code for this package.
@@ -17,8 +17,6 @@ Package.onUse(function (api) {
     'templating',
     'blaze',
     'jquery',
-    'coffeescript',
-    'less',
   ], 'client');
 
   api.addFiles([
@@ -26,7 +24,6 @@ Package.onUse(function (api) {
     'modal-manager/modal-manager.js',
     'modal-manager/modal/modal.html',
     'modal-manager/modal/modal.js',
-    'modal-manager/modal-manager.less',
   ], 'client');
 
   api.export('ModalManager', ['client', 'server']);
