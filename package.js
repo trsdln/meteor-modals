@@ -26,5 +26,5 @@ Package.onUse(function (api) {
     'modal-manager/modal/modal.js',
   ], 'client');
 
-  api.export('ModalManager', ['client', 'server']);
+  api.export('ModalManager', ['client']);
 });
