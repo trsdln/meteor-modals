@@ -7,7 +7,7 @@ Package.describe({
   git: 'https://github.com/trsdln/meteor-modals',
   // By default, Meteor will default to using README.md for documentation.
   // To avoid submitting documentation, set this field to null.
-  documentation: 'README.md'
+  documentation: 'README.md',
 });
 
 Package.onUse(function (api) {
@@ -18,15 +18,16 @@ Package.onUse(function (api) {
     'blaze',
     'jquery',
     'coffeescript',
-    'less'
+    'less',
   ], 'client');
-
 
   api.addFiles([
     'modal-manager/modal-manager.html',
-    'modal-manager/modal-manager.coffee',
+    'modal-manager/modal-manager.js',
     'modal-manager/modal/modal.html',
-    'modal-manager/modal/modal.coffee',
-    'modal-manager/modal-manager.less'
+    'modal-manager/modal/modal.js',
+    'modal-manager/modal-manager.less',
   ], 'client');
+
+  api.export('ModalManager', ['client', 'server']);
 });
