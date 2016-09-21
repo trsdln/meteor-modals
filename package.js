@@ -1,30 +1,21 @@
 Package.describe({
   name: 'trsdln:modals',
-  version: '0.6.2',
-  // Brief, one-line summary of the package.
+  version: '0.6.3',
   summary: 'Provides easy way to control your modals',
-  // URL to the Git repository containing the source code for this package.
   git: 'https://github.com/trsdln/meteor-modals',
-  // By default, Meteor will default to using README.md for documentation.
-  // To avoid submitting documentation, set this field to null.
   documentation: 'README.md',
 });
 
+// eslint-disable-next-line
 Package.onUse(function (api) {
-  api.versionsFrom('1.2');
+  api.versionsFrom('1.3');
   api.use([
-    'mongo',
-    'templating',
+    'ecmascript',
+    'blaze-html-templates',
     'blaze',
+    'mongo',
     'jquery',
   ], 'client');
 
-  api.addFiles([
-    'modal-manager/modal-manager.html',
-    'modal-manager/modal-manager.js',
-    'modal-manager/modal/modal.html',
-    'modal-manager/modal/modal.js',
-  ], 'client');
-
-  api.export('ModalManager', ['client']);
+  api.mainModule('main.js', 'client');
 });
